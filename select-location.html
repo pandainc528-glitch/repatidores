@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Ñan - Seleccionar Ubicación</title>
+    <link rel="stylesheet" href="select-location-styles.css">
+    
+    <!-- Leaflet CSS para OpenStreetMap -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Configuración de Firebase -->
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <button class="back-btn" onclick="window.location.href='cart.html'">
+                <svg class="back-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <h1 class="page-title">Ubicación de Entrega</h1>
+            <div class="header-spacer"></div>
+        </header>
+
+        <!-- Instrucciones -->
+        <div class="instructions">
+            <div class="instruction-icon">📍</div>
+            <p class="instruction-text">Mueve el mapa para seleccionar tu ubicación de entrega</p>
+        </div>
+
+        <!-- Mapa -->
+        <div class="map-container">
+            <div id="map"></div>
+            <!-- Marcador central fijo -->
+            <div class="center-marker">
+                <svg viewBox="0 0 24 24" fill="#c62828">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Información de la ubicación -->
+        <div class="location-info">
+            <div class="info-row">
+                <svg class="info-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <div class="info-content">
+                    <p class="info-label">Coordenadas</p>
+                    <p class="info-value" id="coordinates">Cargando...</p>
+                </div>
+            </div>
+            
+            <!-- Campo de dirección/referencia -->
+            <div class="address-input-container">
+                <label for="addressReference" class="input-label">Dirección o Referencia</label>
+                <input 
+                    type="text" 
+                    id="addressReference" 
+                    class="address-input" 
+                    placeholder="Ej: Casa blanca, portón negro"
+                    maxlength="100"
+                >
+            </div>
+            
+            <!-- Campo de notas adicionales -->
+            <div class="notes-input-container">
+                <label for="deliveryNotes" class="input-label">Notas adicionales (opcional)</label>
+                <textarea 
+                    id="deliveryNotes" 
+                    class="notes-input" 
+                    placeholder="Instrucciones de entrega..."
+                    maxlength="200"
+                    rows="3"
+                ></textarea>
+            </div>
+        </div>
+
+        <!-- Botón de usar mi ubicación actual -->
+        <button class="my-location-btn" id="myLocationBtn">
+            <svg class="location-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+            </svg>
+            Usar mi ubicación actual
+        </button>
+
+        <!-- Resumen del pedido -->
+        <div class="order-summary">
+            <div class="summary-header">
+                <h3>Resumen del Pedido</h3>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Subtotal</span>
+                <span class="summary-value" id="subtotal">$0.00</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Envío</span>
+                <span class="summary-value" id="deliveryFee">$1.00</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-row summary-total">
+                <span class="summary-label">Total</span>
+                <span class="summary-value" id="total">$0.00</span>
+            </div>
+            <button class="confirm-order-btn" id="confirmOrderBtn">
+                Confirmar Pedido
+            </button>
+        </div>
+    </div>
+
+    <script src="select-location-script.js"></script>
+</body>
+</html>

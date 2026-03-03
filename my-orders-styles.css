@@ -1,0 +1,481 @@
+/* ============================================
+   ESTILOS PARA MIS PEDIDOS - ÑAN DELIVERY
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    min-height: 100vh;
+    background: #f5f5f5;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    padding-bottom: 80px;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.header {
+    background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:active {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.back-icon {
+    width: 24px;
+    height: 24px;
+    color: #ffffff;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+    flex: 1;
+    text-align: center;
+}
+
+.header-spacer {
+    width: 40px;
+}
+
+/* ============================================
+   FILTROS DE ESTADO
+   ============================================ */
+
+.status-filters {
+    display: flex;
+    gap: 8px;
+    padding: 15px 20px;
+    overflow-x: auto;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.status-filters::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-btn {
+    background: #f5f5f5;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #5f6368;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.filter-btn:active {
+    transform: scale(0.98);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+    border-color: #c62828;
+    color: #c62828;
+}
+
+/* ============================================
+   LISTA DE PEDIDOS
+   ============================================ */
+
+.orders-section {
+    padding: 15px 20px 20px;
+}
+
+.order-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    animation: slideIn 0.4s ease;
+    border-left: 4px solid #e0e0e0;
+}
+
+.order-card.status-pendiente {
+    border-left-color: #ff9800;
+}
+
+.order-card.status-aceptado {
+    border-left-color: #2196F3;
+}
+
+.order-card.status-en_camino {
+    border-left-color: #9c27b0;
+}
+
+.order-card.status-entregado {
+    border-left-color: #4CAF50;
+}
+
+.order-card.status-cancelado {
+    border-left-color: #f44336;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.order-number {
+    font-size: 12px;
+    color: #9e9e9e;
+    margin-bottom: 4px;
+}
+
+.order-date {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c2c2c;
+}
+
+.order-status {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.pendiente {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.status-badge.aceptado {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-badge.en_camino {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.status-badge.entregado {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.status-badge.cancelado {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.order-items {
+    margin-bottom: 12px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-name {
+    font-size: 14px;
+    color: #2c2c2c;
+    font-weight: 500;
+}
+
+.item-quantity {
+    font-size: 12px;
+    color: #9e9e9e;
+    margin-top: 2px;
+}
+
+.item-price {
+    font-size: 14px;
+    font-weight: 600;
+    color: #c62828;
+}
+
+.order-location {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.location-icon {
+    width: 16px;
+    height: 16px;
+    color: #c62828;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.location-text {
+    flex: 1;
+    font-size: 13px;
+    color: #5f6368;
+    line-height: 1.4;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #f5f5f5;
+}
+
+.order-total-label {
+    font-size: 14px;
+    color: #5f6368;
+}
+
+.order-total-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #c62828;
+}
+
+.order-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn-primary {
+    background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+    color: #ffffff;
+}
+
+.action-btn-secondary {
+    background: #f5f5f5;
+    color: #5f6368;
+}
+
+.action-btn:active {
+    transform: scale(0.98);
+}
+
+/* ============================================
+   ESTADOS
+   ============================================ */
+
+.loading-state {
+    text-align: center;
+    padding: 60px 30px;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f5f5f5;
+    border-top: 4px solid #c62828;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 15px;
+    color: #5f6368;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 30px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.empty-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 10px;
+}
+
+.empty-text {
+    font-size: 15px;
+    color: #9e9e9e;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.explore-btn {
+    background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+    border: none;
+    border-radius: 25px;
+    padding: 14px 32px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+}
+
+.explore-btn:active {
+    transform: scale(0.95);
+}
+
+/* ============================================
+   NAVEGACIÓN INFERIOR
+   ============================================ */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0 8px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+    color: #9e9e9e;
+}
+
+.nav-item:active {
+    transform: scale(0.95);
+}
+
+.nav-icon {
+    width: 26px;
+    height: 26px;
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.nav-item.active {
+    color: #c62828;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 400px) {
+    .order-card {
+        padding: 12px;
+    }
+    
+    .item-name {
+        font-size: 13px;
+    }
+}

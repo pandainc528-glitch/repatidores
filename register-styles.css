@@ -1,0 +1,210 @@
+/* ============================================
+   ESTILOS ESPECÍFICOS PARA REGISTRO
+   ============================================ */
+
+.register-section {
+    flex: 1;
+    padding: 30px 30px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.register-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #3c4043;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+/* Labels para los inputs */
+.input-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3c4043;
+    margin-bottom: 8px;
+    margin-left: 4px;
+}
+
+/* Ajustes a los input groups para el registro */
+.register-section .input-group {
+    margin-bottom: 8px;
+}
+
+/* Input fields específicos para registro */
+.register-section .input-field {
+    width: 100%;
+    padding: 14px 20px;
+    border: 2px solid #dadce0;
+    border-radius: 50px;
+    font-size: 15px;
+    color: #3c4043;
+    transition: all 0.3s ease;
+    outline: none;
+    background: #ffffff;
+}
+
+.register-section .input-field:focus {
+    border-color: #c62828;
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
+}
+
+.register-section .input-field::placeholder {
+    color: #9aa0a6;
+    font-size: 14px;
+}
+
+/* Register Button */
+.register-btn {
+    width: 100%;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+    border: none;
+    border-radius: 50px;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+    margin-top: 20px;
+    text-transform: none;
+}
+
+.register-btn:hover {
+    background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+    box-shadow: 0 6px 16px rgba(198, 40, 40, 0.4);
+    transform: translateY(-1px);
+}
+
+.register-btn:active {
+    transform: translateY(0);
+}
+
+.register-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Login Link Section */
+.login-link-section {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #5f6368;
+}
+
+.login-link {
+    color: #c62828;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.login-link:hover {
+    color: #b71c1c;
+    text-decoration: underline;
+}
+
+/* Animaciones para los elementos del formulario */
+.register-section > * {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.register-section > *:nth-child(1) { animation-delay: 0.1s; }
+.register-section > *:nth-child(2) { animation-delay: 0.2s; }
+.register-section > *:nth-child(3) { animation-delay: 0.3s; }
+.register-section > *:nth-child(4) { animation-delay: 0.4s; }
+.register-section > *:nth-child(5) { animation-delay: 0.5s; }
+.register-section > *:nth-child(6) { animation-delay: 0.6s; }
+.register-section > *:nth-child(7) { animation-delay: 0.7s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .register-section {
+        padding: 25px 20px 30px;
+        gap: 14px;
+    }
+    
+    .register-title {
+        font-size: 22px;
+    }
+    
+    .register-btn {
+        padding: 14px 20px;
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 768px) {
+    .register-section {
+        padding: 40px 40px 50px;
+    }
+}
+
+/* Validación visual de campos */
+.input-field.valid {
+    border-color: #4CAF50;
+}
+
+.input-field.invalid {
+    border-color: #f44336;
+}
+
+.error-message {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-left: 20px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Strength indicator para contraseña */
+.password-strength {
+    margin-top: 5px;
+    margin-left: 20px;
+    font-size: 12px;
+    display: none;
+}
+
+.password-strength.show {
+    display: block;
+}
+
+.password-strength.weak {
+    color: #f44336;
+}
+
+.password-strength.medium {
+    color: #ff9800;
+}
+
+.password-strength.strong {
+    color: #4CAF50;
+}

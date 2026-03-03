@@ -1,0 +1,448 @@
+/* ============================================
+   ESTILOS PARA PERFIL - ÑAN DELIVERY
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    min-height: 100vh;
+    background: #f5f5f5;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    padding-bottom: 80px;
+}
+
+/* ============================================
+   HEADER DE PERFIL
+   ============================================ */
+
+.profile-header {
+    background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+    padding: 40px 20px 30px;
+    text-align: center;
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #ffffff;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: 4px solid #ffffff;
+}
+
+.profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-placeholder {
+    font-size: 50px;
+    color: #c62828;
+}
+
+.user-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.user-email {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 20px;
+}
+
+.edit-profile-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid #ffffff;
+    border-radius: 25px;
+    padding: 10px 24px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.edit-profile-btn:active {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0.98);
+}
+
+.edit-profile-btn .icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* ============================================
+   ESTADÍSTICAS
+   ============================================ */
+
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 20px;
+    margin-top: -20px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.stat-icon {
+    font-size: 32px;
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #c62828;
+    margin-bottom: 2px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #9e9e9e;
+}
+
+/* ============================================
+   MENÚ DE OPCIONES
+   ============================================ */
+
+.menu-section {
+    padding: 20px;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #9e9e9e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    padding-left: 5px;
+}
+
+.menu-item {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.menu-item:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.menu-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: #c62828;
+}
+
+.menu-content {
+    flex: 1;
+}
+
+.menu-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 2px;
+}
+
+.menu-subtitle {
+    font-size: 12px;
+    color: #9e9e9e;
+}
+
+.arrow-icon {
+    width: 20px;
+    height: 20px;
+    fill: #9e9e9e;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   CERRAR SESIÓN
+   ============================================ */
+
+.logout-section {
+    padding: 0 20px 20px;
+}
+
+.logout-btn {
+    width: 100%;
+    background: #ffffff;
+    border: 2px solid #f44336;
+    border-radius: 12px;
+    padding: 16px;
+    color: #f44336;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.logout-btn:active {
+    background: #ffebee;
+    transform: scale(0.98);
+}
+
+.logout-btn .icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* ============================================
+   VERSIÓN
+   ============================================ */
+
+.app-version {
+    text-align: center;
+    padding: 20px;
+    color: #9e9e9e;
+    font-size: 12px;
+}
+
+/* ============================================
+   NAVEGACIÓN INFERIOR
+   ============================================ */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0 8px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+    color: #9e9e9e;
+}
+
+.nav-item:active {
+    transform: scale(0.95);
+}
+
+.nav-icon {
+    width: 26px;
+    height: 26px;
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.nav-item.active {
+    color: #c62828;
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px 25px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 15px;
+}
+
+.modal-text {
+    font-size: 15px;
+    color: #5f6368;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #2c2c2c;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: #c62828;
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn-cancel {
+    background: #f5f5f5;
+    color: #5f6368;
+}
+
+.modal-btn-cancel:active {
+    background: #e0e0e0;
+    transform: scale(0.98);
+}
+
+.modal-btn-confirm {
+    background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+    color: #ffffff;
+}
+
+.modal-btn-confirm:active {
+    transform: scale(0.98);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 400px) {
+    .profile-header {
+        padding: 30px 15px 25px;
+    }
+    
+    .profile-picture {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .stats-section {
+        padding: 15px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+}

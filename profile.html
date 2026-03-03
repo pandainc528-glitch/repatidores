@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Ñan - Perfil</title>
+    <link rel="stylesheet" href="profile-styles.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Configuración de Firebase -->
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header con perfil -->
+        <header class="profile-header">
+            <div class="profile-picture" id="profilePicture">
+                <span class="profile-placeholder">👤</span>
+            </div>
+            <h1 class="user-name" id="userName">Nombre del Usuario</h1>
+            <p class="user-email" id="userEmail">email@ejemplo.com</p>
+            <button class="edit-profile-btn" onclick="openEditProfile()">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+                Editar Perfil
+            </button>
+        </header>
+
+
+
+        <!-- Menú de opciones -->
+        <section class="menu-section">
+            <h2 class="section-title">Mi Cuenta</h2>
+            
+
+            <div class="menu-item" onclick="openEditProfile()">
+                <div class="menu-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <div class="menu-content">
+                    <p class="menu-title">Editar Perfil</p>
+                    <p class="menu-subtitle">Actualizar información personal</p>
+                </div>
+                <svg class="arrow-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Sección de configuración -->
+        <section class="menu-section">
+            <h2 class="section-title">Configuración</h2>
+            
+            <div class="menu-item" onclick="openAbout()">
+                <div class="menu-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                </div>
+                <div class="menu-content">
+                    <p class="menu-title">Acerca de</p>
+                    <p class="menu-subtitle">Información de la app</p>
+                </div>
+                <svg class="arrow-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </div>
+
+            <div class="menu-item" onclick="openHelp()">
+                <div class="menu-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                    </svg>
+                </div>
+                <div class="menu-content">
+                    <p class="menu-title">Ayuda</p>
+                    <p class="menu-subtitle">Centro de soporte</p>
+                </div>
+                <svg class="arrow-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Botón de cerrar sesión -->
+        <section class="logout-section">
+            <button class="logout-btn" onclick="confirmLogout()">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                </svg>
+                Cerrar Sesión
+            </button>
+        </section>
+
+        <!-- Versión -->
+        <div class="app-version">
+            <p>Ñan Delivery v1.0.0</p>
+        </div>
+
+        <!-- Navegación inferior -->
+        <nav class="bottom-nav">
+            <button class="nav-item" onclick="window.location.href='driver-dashboard.html'">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <span class="nav-label">Inicio</span>
+            </button>
+            
+            <button class="nav-item" onclick="window.location.href='driver-orders.html'">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                </svg>
+                <span class="nav-label">Mis Pedidos</span>
+            </button>
+  
+            <button class="nav-item active">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span class="nav-label">Perfil</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="profile-script.js"></script>
+</body>
+</html>

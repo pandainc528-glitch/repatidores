@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Ñan - Registro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="register-styles.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Configuración de Firebase -->
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <!-- Indicador de estado de Firebase -->
+    <div id="firebaseStatus" class="firebase-status">
+        <span class="status-dot"></span>
+        <span class="status-text">Conectando...</span>
+    </div>
+
+    <div class="container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo-container">
+                <h1 class="logo-text">Ñan</h1>
+            </div>
+        </div>
+
+        <!-- Register Section -->
+        <div class="register-section">
+            <h2 class="register-title">Regístrate</h2>
+
+            <!-- Email Input -->
+            <div class="input-group">
+                <label class="input-label">Correo</label>
+                <input type="email" id="emailInput" placeholder="ejemplo@correo.com" class="input-field">
+            </div>
+
+            <!-- Name Input -->
+            <div class="input-group">
+                <label class="input-label">Nombre</label>
+                <input type="text" id="nameInput" placeholder="Tu nombre completo" class="input-field">
+            </div>
+
+            <!-- Password Input -->
+            <div class="input-group">
+                <label class="input-label">Contraseña</label>
+                <input type="password" id="passwordInput" placeholder="Mínimo 6 caracteres" class="input-field">
+            </div>
+
+            <!-- Phone Input -->
+            <div class="input-group">
+                <label class="input-label">Número de teléfono</label>
+                <input type="tel" id="phoneInput" placeholder="0987654321" class="input-field">
+            </div>
+
+            <!-- Register Button -->
+            <button class="register-btn" id="registerBtn">
+                Registrar
+            </button>
+
+            <!-- Login Link -->
+            <div class="login-link-section">
+                <span>¿Ya tienes cuenta? </span>
+                <a href="index.html" class="login-link">Inicia sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="register-script.js"></script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+/* ============================================
+   MAPA DE NAVEGACIÓN - REPARTIDOR
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f5f5f5;
+    overflow: hidden;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #ffffff;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.map-header {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+.back-btn,
+.refresh-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.back-btn svg,
+.refresh-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: #ffffff;
+}
+
+.back-btn:active,
+.refresh-btn:active {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0.95);
+}
+
+.header-info {
+    flex: 1;
+}
+
+.order-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 2px;
+}
+
+.customer-name {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================
+   MAPA
+   ============================================ */
+
+.map-container {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Marcadores personalizados */
+.custom-marker {
+    background: #ffffff;
+    border: 3px solid #1976d2;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.driver-marker {
+    background: #1976d2;
+    border: 3px solid #ffffff;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(25, 118, 210, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(25, 118, 210, 0);
+    }
+}
+
+/* ============================================
+   PANEL DE INFORMACIÓN
+   ============================================ */
+
+.info-panel {
+    background: #ffffff;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    padding: 20px;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+/* Información de ruta */
+.route-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.route-stat {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-icon {
+    font-size: 28px;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1976d2;
+    margin-bottom: 2px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #9e9e9e;
+}
+
+/* Información del cliente */
+.client-info {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.info-icon {
+    width: 20px;
+    height: 20px;
+    fill: #1976d2;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.info-text {
+    flex: 1;
+    font-size: 14px;
+    color: #2c2c2c;
+    line-height: 1.5;
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.action-btn {
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.btn-call {
+    background: #ffffff;
+    color: #1976d2;
+    border: 2px solid #1976d2;
+}
+
+.btn-call:active {
+    background: #e3f2fd;
+    transform: scale(0.98);
+}
+
+.btn-navigate {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
+}
+
+.btn-navigate:active {
+    transform: scale(0.98);
+}
+
+/* Panel de estado */
+.order-status-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #f3e5f5;
+    border-radius: 20px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #9c27b0;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.status-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #9c27b0;
+}
+
+.complete-btn {
+    flex: 1;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #4CAF50 0%, #43a047 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.complete-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.complete-btn:active {
+    transform: scale(0.98);
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    animation: fadeIn 0.3s ease;
+    padding: 20px;
+}
+
+.modal-content {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px 25px;
+    width: 100%;
+    max-width: 350px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 10px;
+}
+
+.modal-text {
+    font-size: 15px;
+    color: #5f6368;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn-cancel {
+    background: #f5f5f5;
+    color: #5f6368;
+}
+
+.modal-btn-cancel:active {
+    background: #e0e0e0;
+    transform: scale(0.98);
+}
+
+.modal-btn-confirm {
+    background: linear-gradient(135deg, #4CAF50 0%, #43a047 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.modal-btn-confirm:active {
+    transform: scale(0.98);
+}
+
+/* ============================================
+   POPUP DEL MAPA
+   ============================================ */
+
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.leaflet-popup-content {
+    margin: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 400px) {
+    .map-header {
+        padding: 12px 15px;
+    }
+    
+    .info-panel {
+        padding: 15px;
+    }
+    
+    .route-info {
+        gap: 10px;
+    }
+    
+    .route-stat {
+        padding: 12px;
+    }
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+
+.info-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.info-panel::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 10px;
+}
+
+.info-panel::-webkit-scrollbar-thumb {
+    background: #1976d2;
+    border-radius: 10px;
+}

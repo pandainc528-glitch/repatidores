@@ -1,0 +1,491 @@
+/* ============================================
+   DASHBOARD REPARTIDOR - ÑAN DELIVERY
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    min-height: 100vh;
+    background: #f5f5f5;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    padding-bottom: 80px;
+}
+
+/* ============================================
+   HEADER DEL REPARTIDOR
+   ============================================ */
+
+.driver-header {
+    background: linear-gradient(135deg, #2196F3 0%, #2196F3 100%);
+    padding: 30px 20px 25px;
+    border-radius: 0 0 25px 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.driver-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.driver-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #64b5f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.driver-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    font-size: 30px;
+    color: #ffffff;
+}
+
+.driver-info {
+    flex: 1;
+}
+
+.greeting {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 2px;
+}
+
+.driver-name {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================
+   TARJETA DE COMISIÓN
+   ============================================ */
+
+.earnings-card {
+    background: #ffffff;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.earnings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.earnings-title {
+    font-size: 14px;
+    color: #5f6368;
+    font-weight: 500;
+}
+
+.chart-icon {
+    width: 24px;
+    height: 24px;
+    color: #2196F3;
+}
+
+.earnings-amount {
+    font-size: 36px;
+    font-weight: 700;
+    color: #2196F3;
+    margin-bottom: 5px;
+}
+
+.earnings-period {
+    font-size: 13px;
+    color: #9e9e9e;
+}
+
+/* ============================================
+   SECCIÓN DE PEDIDOS
+   ============================================ */
+
+.orders-section {
+    padding: 0 20px 20px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c2c2c;
+}
+
+.orders-count {
+    background: #1976d2;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    min-width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+}
+
+/* ============================================
+   LISTA DE PEDIDOS
+   ============================================ */
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.order-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #1976d2;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: slideIn 0.4s ease;
+}
+
+.order-card:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.order-id {
+    font-size: 12px;
+    color: #9e9e9e;
+    margin-bottom: 4px;
+}
+
+.order-customer {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c2c2c;
+}
+
+.order-total {
+    text-align: right;
+}
+
+.total-label {
+    font-size: 12px;
+    color: #9e9e9e;
+    margin-bottom: 2px;
+}
+
+.total-amount {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1976d2;
+}
+
+.order-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #5f6368;
+}
+
+.detail-icon {
+    width: 18px;
+    height: 18px;
+    color: #9e9e9e;
+    flex-shrink: 0;
+}
+
+.detail-text {
+    flex: 1;
+    line-height: 1.4;
+}
+
+.order-distance {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #5f6368;
+    margin-bottom: 15px;
+    padding: 8px 12px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.distance-icon {
+    width: 16px;
+    height: 16px;
+    color: #1976d2;
+}
+
+.order-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-accept {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
+}
+
+.btn-accept:active {
+    transform: scale(0.98);
+}
+
+.btn-view {
+    background: #f5f5f5;
+    color: #5f6368;
+}
+
+.btn-view:active {
+    background: #e0e0e0;
+    transform: scale(0.98);
+}
+
+/* ============================================
+   ESTADOS
+   ============================================ */
+
+.loading-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f5f5f5;
+    border-top: 4px solid #1976d2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 14px;
+    color: #9e9e9e;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 80px 30px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.empty-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 8px;
+}
+
+.empty-subtext {
+    font-size: 14px;
+    color: #9e9e9e;
+}
+
+/* ============================================
+   NAVEGACIÓN INFERIOR
+   ============================================ */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0 8px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+    color: #9e9e9e;
+}
+
+.nav-item:active {
+    transform: scale(0.95);
+}
+
+.nav-icon {
+    width: 26px;
+    height: 26px;
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.nav-item.active {
+    color: #1976d2;
+}
+
+/* ============================================
+   ITEMS DE PEDIDO
+   ============================================ */
+
+.order-items {
+    margin-bottom: 12px;
+}
+
+.items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #5f6368;
+    padding: 4px 0;
+}
+
+.item-name {
+    flex: 1;
+}
+
+.item-quantity {
+    color: #9e9e9e;
+    margin: 0 8px;
+}
+
+.item-price {
+    font-weight: 600;
+    color: #2c2c2c;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 400px) {
+    .driver-header {
+        padding: 25px 15px 20px;
+    }
+    
+    .earnings-card {
+        margin: 15px;
+        padding: 15px;
+    }
+    
+    .earnings-amount {
+        font-size: 32px;
+    }
+    
+    .orders-section {
+        padding: 0 15px 15px;
+    }
+    
+    .order-card {
+        padding: 15px;
+    }
+}

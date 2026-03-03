@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico - Repartidor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #2d2d2d;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        
+        h1 {
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 28px;
+        }
+        
+        .section {
+            background: #1e1e1e;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #1976d2;
+        }
+        
+        .section h2 {
+            color: #1976d2;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #2d2d2d;
+            border-radius: 3px;
+        }
+        
+        .success { color: #00ff00; }
+        .error { color: #ff0000; }
+        .warning { color: #ffaa00; }
+        .info { color: #00aaff; }
+        
+        button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #1565c0;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+    </style>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Configuración de Firebase -->
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 DIAGNÓSTICO DE REPARTIDOR</h1>
+        
+        <div class="section">
+            <h2>1. VERIFICAR AUTENTICACIÓN</h2>
+            <div id="authCheck"></div>
+            <div class="button-group">
+                <button onclick="checkAuth()">Verificar Usuario</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>2. VERIFICAR DATOS DE REPARTIDOR</h2>
+            <div id="driverCheck"></div>
+            <div class="button-group">
+                <button onclick="checkDriverData()">Verificar Datos</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>3. VERIFICAR PEDIDOS DISPONIBLES</h2>
+            <div id="ordersCheck"></div>
+            <div class="button-group">
+                <button onclick="checkPendingOrders()">Ver Pedidos Pendientes</button>
+                <button onclick="checkMyOrders()">Ver Mis Pedidos</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>4. PROBAR PERMISOS</h2>
+            <div id="permissionsCheck"></div>
+            <div class="button-group">
+                <button onclick="testPermissions()">Probar Permisos</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFirebase();
+            
+            firebase.auth().onAuthStateChanged((user) => {
+                currentUser = user;
+                if (user) {
+                    log('authCheck', `✅ Usuario autenticado: ${user.email}`, 'success');
+                } else {
+                    log('authCheck', '⚠️ No hay usuario autenticado', 'warning');
+                }
+            });
+        });
+
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = message;
+            element.appendChild(div);
+        }
+
+        function clear(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        // 1. Verificar autenticación
+        function checkAuth() {
+            clear('authCheck');
+            
+            if (!currentUser) {
+                log('authCheck', '❌ No hay usuario autenticado', 'error');
+                log('authCheck', '💡 Ve a driver-login.html para iniciar sesión', 'warning');
+                return;
+            }
+            
+            log('authCheck', '✅ Usuario autenticado:', 'success');
+            log('authCheck', `   UID: ${currentUser.uid}`, 'info');
+            log('authCheck', `   Email: ${currentUser.email}`, 'info');
+        }
+
+        // 2. Verificar datos del repartidor
+        async function checkDriverData() {
+            clear('driverCheck');
+            
+            if (!currentUser) {
+                log('driverCheck', '❌ No hay usuario autenticado', 'error');
+                return;
+            }
+            
+            log('driverCheck', '🔍 Buscando datos del repartidor...', 'info');
+            
+            try {
+                const db = firebase.firestore();
+                const driverDoc = await db.collection('repartidores').doc(currentUser.uid).get();
+                
+                if (!driverDoc.exists) {
+                    log('driverCheck', '❌ No existe en la colección "repartidores"', 'error');
+                    log('driverCheck', '💡 Regístrate en driver-register.html', 'warning');
+                    return;
+                }
+                
+                const data = driverDoc.data();
+                log('driverCheck', '✅ Repartidor encontrado:', 'success');
+                log('driverCheck', `   Nombre: ${data.nombre}`, 'info');
+                log('driverCheck', `   Status: ${data.status}`, data.status === 'activo' ? 'success' : 'warning');
+                log('driverCheck', `   Teléfono: ${data.telefono}`, 'info');
+                log('driverCheck', `   Vehículo: ${data.tipoVehiculo}`, 'info');
+                log('driverCheck', `   Placa: ${data.placa}`, 'info');
+                
+                if (data.status !== 'activo') {
+                    log('driverCheck', '⚠️ Tu status no es "activo", no podrás ver pedidos', 'warning');
+                }
+                
+            } catch (error) {
+                log('driverCheck', `❌ Error: ${error.message}`, 'error');
+                log('driverCheck', `   Código: ${error.code}`, 'error');
+            }
+        }
+
+        // 3. Verificar pedidos pendientes
+        async function checkPendingOrders() {
+            clear('ordersCheck');
+            log('ordersCheck', '🔍 Buscando pedidos pendientes...', 'info');
+            
+            if (!currentUser) {
+                log('ordersCheck', '❌ No hay usuario autenticado', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.firestore();
+                
+                // Primero verificar que el repartidor esté activo
+                const driverDoc = await db.collection('repartidores').doc(currentUser.uid).get();
+                
+                if (!driverDoc.exists) {
+                    log('ordersCheck', '❌ No existes en "repartidores"', 'error');
+                    return;
+                }
+                
+                const driverData = driverDoc.data();
+                
+                if (driverData.status !== 'activo') {
+                    log('ordersCheck', `⚠️ Tu status es "${driverData.status}", debe ser "activo"`, 'warning');
+                    log('ordersCheck', '💡 Solo repartidores activos pueden ver pedidos', 'warning');
+                    return;
+                }
+                
+                log('ordersCheck', '✅ Tu status es "activo"', 'success');
+                
+                // Intentar leer pedidos pendientes
+                const snapshot = await db.collection('orders')
+                    .where('status', '==', 'pendiente')
+                    .get();
+                
+                log('ordersCheck', `📊 Pedidos pendientes encontrados: ${snapshot.size}`, 'success');
+                
+                if (snapshot.empty) {
+                    log('ordersCheck', '⚠️ No hay pedidos pendientes en este momento', 'warning');
+                    return;
+                }
+                
+                snapshot.forEach((doc, index) => {
+                    const data = doc.data();
+                    const html = `
+                        <strong>Pedido ${index + 1}:</strong><br>
+                        ID: ${doc.id.substring(0, 8)}<br>
+                        Cliente: ${data.customerName}<br>
+                        Total: $${data.total}<br>
+                        Ubicación: ${data.deliveryLocation.address}
+                    `;
+                    log('ordersCheck', html, 'info');
+                });
+                
+            } catch (error) {
+                log('ordersCheck', `❌ Error: ${error.message}`, 'error');
+                log('ordersCheck', `   Código: ${error.code}`, 'error');
+                
+                if (error.code === 'permission-denied') {
+                    log('ordersCheck', '⚠️ PERMISSION DENIED', 'error');
+                    log('ordersCheck', 'Posibles causas:', 'warning');
+                    log('ordersCheck', '1. Tu status no es "activo"', 'info');
+                    log('ordersCheck', '2. Las reglas de Firestore no permiten el acceso', 'info');
+                    log('ordersCheck', '3. No existes en la colección "repartidores"', 'info');
+                }
+            }
+        }
+
+        // 4. Verificar mis pedidos
+        async function checkMyOrders() {
+            clear('ordersCheck');
+            log('ordersCheck', '🔍 Buscando tus pedidos asignados...', 'info');
+            
+            if (!currentUser) {
+                log('ordersCheck', '❌ No hay usuario autenticado', 'error');
+                return;
+            }
+            
+            try {
+                const db = firebase.firestore();
+                const snapshot = await db.collection('orders')
+                    .where('driverId', '==', currentUser.uid)
+                    .get();
+                
+                log('ordersCheck', `📊 Pedidos asignados a ti: ${snapshot.size}`, 'success');
+                
+                if (snapshot.empty) {
+                    log('ordersCheck', '⚠️ No tienes pedidos asignados', 'warning');
+                    return;
+                }
+                
+                snapshot.forEach((doc, index) => {
+                    const data = doc.data();
+                    const html = `
+                        <strong>Tu Pedido ${index + 1}:</strong><br>
+                        ID: ${doc.id.substring(0, 8)}<br>
+                        Cliente: ${data.customerName}<br>
+                        Status: ${data.status}<br>
+                        Total: $${data.total}
+                    `;
+                    log('ordersCheck', html, 'success');
+                });
+                
+            } catch (error) {
+                log('ordersCheck', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // 5. Probar permisos
+        async function testPermissions() {
+            clear('permissionsCheck');
+            log('permissionsCheck', '🔍 Probando permisos...', 'info');
+            
+            if (!currentUser) {
+                log('permissionsCheck', '❌ No hay usuario autenticado', 'error');
+                return;
+            }
+            
+            const db = firebase.firestore();
+            
+            // Test 1: Leer repartidores
+            try {
+                await db.collection('repartidores').doc(currentUser.uid).get();
+                log('permissionsCheck', '✅ Permiso de LECTURA en "repartidores": OK', 'success');
+            } catch (error) {
+                log('permissionsCheck', `❌ Permiso de LECTURA en "repartidores": ${error.message}`, 'error');
+            }
+            
+            // Test 2: Leer pedidos
+            try {
+                await db.collection('orders').limit(1).get();
+                log('permissionsCheck', '✅ Permiso de LECTURA en "orders": OK', 'success');
+            } catch (error) {
+                log('permissionsCheck', `❌ Permiso de LECTURA en "orders": ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

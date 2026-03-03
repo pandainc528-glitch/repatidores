@@ -1,0 +1,200 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================
+    // FUNCIONES AUXILIARES
+    // ============================================
+    
+    // Verificar si el usuario está autenticado
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    // Verificar si es el dueño del documento
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    // Verificar si el usuario es un cliente
+    function isCliente() {
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.rol == 'cliente';
+    }
+    
+    // Verificar si el usuario es un repartidor
+    function isRepartidor() {
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/repartidores/$(request.auth.uid));
+    }
+    
+    // Verificar si el repartidor está activo
+    function isRepartidorActivo() {
+      return isRepartidor() &&
+             get(/databases/$(database)/documents/repartidores/$(request.auth.uid)).data.status == 'activo';
+    }
+    
+    // Validar email
+    function isValidEmail(email) {
+      return email.matches('^[^@]+@[^@]+\\.[^@]+$');
+    }
+    
+    // Validar teléfono (10 dígitos)
+    function isValidPhone(phone) {
+      return phone.matches('^[0-9]{10}$');
+    }
+    
+    
+    // ============================================
+    // COLECCIÓN: USERS (CLIENTES)
+    // ============================================
+    
+    match /users/{userId} {
+      // Lectura: Solo el propio usuario
+      allow read: if isOwner(userId);
+      
+      // Creación: Solo cuando se registra (debe ser su propio UID)
+      allow create: if isOwner(userId) &&
+                       request.resource.data.keys().hasAll(['email', 'displayName', 'rol']) &&
+                       request.resource.data.rol == 'cliente' &&
+                       isValidEmail(request.resource.data.email) &&
+                       request.resource.data.displayName.size() >= 3;
+      
+      // Actualización: Solo el propio usuario y no puede cambiar su rol
+      allow update: if isOwner(userId) &&
+                       request.resource.data.rol == resource.data.rol &&
+                       request.resource.data.uid == resource.data.uid;
+      
+      // Eliminación: Solo el propio usuario
+      allow delete: if isOwner(userId);
+    }
+    
+    
+    // ============================================
+    // COLECCIÓN: REPARTIDORES (DRIVERS)
+    // ============================================
+    
+    match /repartidores/{driverId} {
+      // Lectura: Solo el propio repartidor
+      allow read: if isOwner(driverId);
+      
+      // Creación: Solo cuando se registra como repartidor
+      allow create: if isOwner(driverId) &&
+                       request.resource.data.keys().hasAll([
+                         'uid', 'nombre', 'email', 'telefono', 'cedula',
+                         'tipoVehiculo', 'placa', 'status'
+                       ]) &&
+                       request.resource.data.uid == request.auth.uid &&
+                       isValidEmail(request.resource.data.email) &&
+                       isValidPhone(request.resource.data.telefono) &&
+                       request.resource.data.cedula.size() == 10 &&
+                       request.resource.data.nombre.size() >= 3 &&
+                       request.resource.data.tipoVehiculo in ['moto', 'auto', 'bicicleta'] &&
+                       request.resource.data.placa.size() >= 3 &&
+                       // El status inicial debe ser 'activo' o 'pendiente'
+                       request.resource.data.status in ['activo', 'pendiente'];
+      
+      // Actualización: El repartidor puede actualizar sus datos pero no su status ni uid
+      allow update: if isOwner(driverId) &&
+                       request.resource.data.uid == resource.data.uid &&
+                       // No puede cambiar su status (solo admin puede hacerlo)
+                       request.resource.data.status == resource.data.status;
+      
+      // Eliminación: No permitida (solo admin puede eliminar)
+      allow delete: if false;
+    }
+    
+    
+    // ============================================
+    // COLECCIÓN: ORDERS (PEDIDOS)
+    // ============================================
+    
+    match /orders/{orderId} {
+      // Lectura: 
+      // - Cliente: solo sus propios pedidos
+      // - Repartidor activo: pedidos pendientes (sin asignar) o pedidos asignados a él
+      allow read: if isSignedIn() && (
+        // Cliente lee sus propios pedidos
+        resource.data.userId == request.auth.uid ||
+        // Repartidor activo lee pedidos pendientes o asignados a él
+        (isRepartidorActivo() && (
+          resource.data.status == 'pendiente' ||
+          resource.data.driverId == request.auth.uid
+        ))
+      );
+      
+      // Creación: Solo clientes pueden crear pedidos
+      allow create: if isSignedIn() &&
+                       request.resource.data.userId == request.auth.uid &&
+                       request.resource.data.keys().hasAll([
+                         'userId', 'customerName', 'customerEmail', 'items',
+                         'subtotal', 'deliveryFee', 'total', 'deliveryLocation',
+                         'status', 'paymentMethod'
+                       ]) &&
+                       // Validaciones de datos
+                       request.resource.data.items.size() > 0 &&
+                       request.resource.data.subtotal >= 0 &&
+                       request.resource.data.total >= 0 &&
+                       request.resource.data.deliveryLocation.keys().hasAll(['latitude', 'longitude', 'address']) &&
+                       // Status inicial debe ser 'pendiente'
+                       request.resource.data.status == 'pendiente' &&
+                       // Repartidor debe ser null al crear
+                       request.resource.data.driverId == null;
+      
+      // Actualización:
+      // - Cliente: solo puede cancelar si está pendiente
+      // - Repartidor activo: puede aceptar pedidos pendientes y actualizar status
+      allow update: if isSignedIn() && (
+        // Cliente cancela su pedido si está pendiente
+        (resource.data.userId == request.auth.uid &&
+         resource.data.status == 'pendiente' &&
+         request.resource.data.status == 'cancelado' &&
+         request.resource.data.userId == resource.data.userId &&
+         request.resource.data.driverId == resource.data.driverId) ||
+        
+        // Repartidor activo acepta pedido pendiente
+        (isRepartidorActivo() &&
+         resource.data.status == 'pendiente' &&
+         resource.data.driverId == null &&
+         request.resource.data.driverId == request.auth.uid &&
+         request.resource.data.status == 'aceptado' &&
+         request.resource.data.userId == resource.data.userId) ||
+        
+        // Repartidor actualiza status de su pedido asignado
+        (isRepartidorActivo() &&
+         resource.data.driverId == request.auth.uid &&
+         request.resource.data.driverId == request.auth.uid &&
+         request.resource.data.userId == resource.data.userId &&
+         // Solo puede cambiar a ciertos estados
+         request.resource.data.status in ['aceptado', 'en_camino', 'entregado'])
+      );
+      
+      // Eliminación: No permitida
+      allow delete: if false;
+    }
+    
+    
+    // ============================================
+    // COLECCIÓN: RESTAURANTS (Opcional - futuro)
+    // ============================================
+    
+    match /restaurants/{restaurantId} {
+      // Lectura: Todos pueden leer
+      allow read: if true;
+      
+      // Escritura: Por ahora no permitida (en el futuro solo admins)
+      allow write: if false;
+    }
+    
+    
+    // ============================================
+    // REGLAS POR DEFECTO
+    // ============================================
+    
+    // Denegar acceso a cualquier otra colección no definida
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

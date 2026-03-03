@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico - Ñan Delivery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #2d2d2d;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        
+        h1 {
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 28px;
+        }
+        
+        .section {
+            background: #1e1e1e;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #00ff00;
+        }
+        
+        .section h2 {
+            color: #ffff00;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #2d2d2d;
+            border-radius: 3px;
+        }
+        
+        .success {
+            color: #00ff00;
+        }
+        
+        .error {
+            color: #ff0000;
+        }
+        
+        .warning {
+            color: #ffaa00;
+        }
+        
+        .info {
+            color: #00aaff;
+        }
+        
+        button {
+            background: #00ff00;
+            color: #1e1e1e;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #00cc00;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
+        pre {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-top: 10px;
+            color: #ffffff;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #00ff00;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Configuración de Firebase -->
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 DIAGNÓSTICO DE PEDIDOS - ÑAN DELIVERY</h1>
+        
+        <div class="section">
+            <h2>1. VERIFICACIÓN DE FIREBASE</h2>
+            <div id="firebaseCheck"></div>
+            <div class="button-group">
+                <button onclick="checkFirebase()">Verificar Firebase</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>2. VERIFICACIÓN DE AUTENTICACIÓN</h2>
+            <div id="authCheck"></div>
+            <div class="button-group">
+                <button onclick="checkAuth()">Verificar Usuario</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>3. VERIFICACIÓN DE PEDIDOS</h2>
+            <div id="ordersCheck"></div>
+            <div class="button-group">
+                <button onclick="checkAllOrders()">Ver TODOS los Pedidos</button>
+                <button onclick="checkMyOrders()">Ver MIS Pedidos</button>
+                <button onclick="createTestOrder()">Crear Pedido de Prueba</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>4. VERIFICACIÓN DE REGLAS DE FIRESTORE</h2>
+            <div id="rulesCheck"></div>
+            <div class="button-group">
+                <button onclick="testFirestoreRules()">Probar Permisos</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>5. SOLUCIONES RÁPIDAS</h2>
+            <div id="solutions">
+                <div class="result info">
+                    <strong>Si no ves pedidos, intenta:</strong><br>
+                    1. Verificar que estás autenticado<br>
+                    2. Crear un pedido de prueba<br>
+                    3. Revisar las reglas de Firestore<br>
+                    4. Verificar la consola del navegador (F12)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        // Inicializar Firebase
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFirebase();
+            
+            firebase.auth().onAuthStateChanged((user) => {
+                currentUser = user;
+                if (user) {
+                    log('authCheck', `✅ Usuario autenticado: ${user.email}`, 'success');
+                } else {
+                    log('authCheck', '⚠️ No hay usuario autenticado', 'warning');
+                }
+            });
+        });
+
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = message;
+            element.appendChild(div);
+        }
+
+        function clear(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        // 1. Verificar Firebase
+        async function checkFirebase() {
+            clear('firebaseCheck');
+            
+            try {
+                log('firebaseCheck', '🔍 Verificando Firebase...', 'info');
+                
+                if (typeof firebase === 'undefined') {
+                    log('firebaseCheck', '❌ Firebase no está cargado', 'error');
+                    return;
+                }
+                log('firebaseCheck', '✅ Firebase está cargado', 'success');
+                
+                const db = firebase.firestore();
+                log('firebaseCheck', '✅ Firestore inicializado', 'success');
+                
+                // Probar conexión
+                await db.collection('_test_connection_').limit(1).get();
+                log('firebaseCheck', '✅ Conexión a Firestore exitosa', 'success');
+                
+            } catch (error) {
+                log('firebaseCheck', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // 2. Verificar Autenticación
+        function checkAuth() {
+            clear('authCheck');
+            
+            if (!currentUser) {
+                log('authCheck', '❌ No hay usuario autenticado', 'error');
+                log('authCheck', '💡 Ve a index.html para iniciar sesión', 'warning');
+                return;
+            }
+            
+            log('authCheck', '✅ Usuario autenticado:', 'success');
+            log('authCheck', `   UID: ${currentUser.uid}`, 'info');
+            log('authCheck', `   Email: ${currentUser.email}`, 'info');
+            log('authCheck', `   Nombre: ${currentUser.displayName || 'N/A'}`, 'info');
+        }
+
+        // 3. Verificar TODOS los pedidos
+        async function checkAllOrders() {
+            clear('ordersCheck');
+            log('ordersCheck', '🔍 Buscando TODOS los pedidos en Firestore...', 'info');
+            
+            try {
+                const db = firebase.firestore();
+                const snapshot = await db.collection('orders').get();
+                
+                log('ordersCheck', `📊 Total de pedidos en la base de datos: ${snapshot.size}`, 'success');
+                
+                if (snapshot.empty) {
+                    log('ordersCheck', '⚠️ No hay ningún pedido en Firestore', 'warning');
+                    log('ordersCheck', '💡 Crea un pedido de prueba usando el botón de abajo', 'info');
+                    return;
+                }
+                
+                snapshot.forEach((doc, index) => {
+                    const data = doc.data();
+                    const html = `
+                        <strong>Pedido ${index + 1}:</strong><br>
+                        ID: ${doc.id}<br>
+                        Usuario: ${data.userId}<br>
+                        Cliente: ${data.customerName}<br>
+                        Total: $${data.total}<br>
+                        Estado: ${data.status}<br>
+                        Items: ${data.items.length}
+                    `;
+                    log('ordersCheck', html, 'info');
+                });
+                
+            } catch (error) {
+                log('ordersCheck', `❌ Error: ${error.message}`, 'error');
+                log('ordersCheck', `Código: ${error.code}`, 'error');
+            }
+        }
+
+        // 4. Verificar MIS pedidos
+        async function checkMyOrders() {
+            clear('ordersCheck');
+            
+            if (!currentUser) {
+                log('ordersCheck', '❌ Debes estar autenticado', 'error');
+                return;
+            }
+            
+            log('ordersCheck', `🔍 Buscando pedidos de: ${currentUser.email}`, 'info');
+            log('ordersCheck', `UID: ${currentUser.uid}`, 'info');
+            
+            try {
+                const db = firebase.firestore();
+                const snapshot = await db.collection('orders')
+                    .where('userId', '==', currentUser.uid)
+                    .get();
+                
+                log('ordersCheck', `📊 Pedidos encontrados: ${snapshot.size}`, 'success');
+                
+                if (snapshot.empty) {
+                    log('ordersCheck', '⚠️ No tienes pedidos registrados', 'warning');
+                    log('ordersCheck', '💡 Crea un pedido de prueba', 'info');
+                    return;
+                }
+                
+                snapshot.forEach((doc, index) => {
+                    const data = doc.data();
+                    const html = `
+                        <strong>Tu Pedido ${index + 1}:</strong><br>
+                        ID: ${doc.id.substring(0, 8)}...<br>
+                        Total: $${data.total}<br>
+                        Estado: ${data.status}<br>
+                        Ubicación: ${data.deliveryLocation.address}<br>
+                        Fecha: ${data.orderDate ? data.orderDate.toDate().toLocaleString() : 'N/A'}
+                    `;
+                    log('ordersCheck', html, 'success');
+                });
+                
+            } catch (error) {
+                log('ordersCheck', `❌ Error: ${error.message}`, 'error');
+                
+                if (error.code === 'failed-precondition') {
+                    log('ordersCheck', '⚠️ Posible problema con índices de Firestore', 'warning');
+                }
+            }
+        }
+
+        // 5. Crear pedido de prueba
+        async function createTestOrder() {
+            clear('ordersCheck');
+            
+            if (!currentUser) {
+                log('ordersCheck', '❌ Debes estar autenticado', 'error');
+                return;
+            }
+            
+            log('ordersCheck', '📝 Creando pedido de prueba...', 'info');
+            
+            try {
+                const db = firebase.firestore();
+                
+                const testOrder = {
+                    userId: currentUser.uid,
+                    customerName: currentUser.displayName || 'Usuario de Prueba',
+                    customerEmail: currentUser.email,
+                    items: [
+                        {
+                            productId: 'test-1',
+                            name: 'Producto de Prueba',
+                            price: 5.00,
+                            quantity: 1,
+                            subtotal: 5.00,
+                            category: 'restaurantes',
+                            image: 'https://via.placeholder.com/100'
+                        }
+                    ],
+                    subtotal: 5.00,
+                    deliveryFee: 1.00,
+                    total: 6.00,
+                    deliveryLocation: {
+                        latitude: 0.3346056,
+                        longitude: -78.2185059,
+                        address: 'Dirección de Prueba',
+                        notes: 'Pedido de prueba del diagnóstico'
+                    },
+                    status: 'pendiente',
+                    paymentMethod: 'efectivo',
+                    paymentStatus: 'pendiente',
+                    orderDate: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    driverId: null,
+                    driverName: null
+                };
+                
+                const orderRef = await db.collection('orders').add(testOrder);
+                
+                log('ordersCheck', `✅ Pedido de prueba creado exitosamente!`, 'success');
+                log('ordersCheck', `ID: ${orderRef.id}`, 'success');
+                log('ordersCheck', `💡 Ahora ve a my-orders.html para verlo`, 'info');
+                
+            } catch (error) {
+                log('ordersCheck', `❌ Error al crear pedido: ${error.message}`, 'error');
+                log('ordersCheck', `Código: ${error.code}`, 'error');
+                
+                if (error.code === 'permission-denied') {
+                    log('ordersCheck', '⚠️ Problema con permisos de Firestore', 'warning');
+                    log('ordersCheck', '💡 Verifica las reglas de seguridad', 'info');
+                }
+            }
+        }
+
+        // 6. Probar reglas de Firestore
+        async function testFirestoreRules() {
+            clear('rulesCheck');
+            log('rulesCheck', '🔍 Probando permisos de Firestore...', 'info');
+            
+            if (!currentUser) {
+                log('rulesCheck', '❌ Debes estar autenticado', 'error');
+                return;
+            }
+            
+            const db = firebase.firestore();
+            
+            // Test 1: Lectura
+            try {
+                await db.collection('orders').limit(1).get();
+                log('rulesCheck', '✅ Permiso de LECTURA: OK', 'success');
+            } catch (error) {
+                log('rulesCheck', `❌ Permiso de LECTURA: ${error.message}`, 'error');
+            }
+            
+            // Test 2: Escritura
+            try {
+                const testRef = await db.collection('orders').add({
+                    userId: currentUser.uid,
+                    test: true,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                log('rulesCheck', '✅ Permiso de ESCRITURA: OK', 'success');
+                
+                // Eliminar test
+                await testRef.delete();
+                log('rulesCheck', '✅ Permiso de ELIMINACIÓN: OK', 'success');
+            } catch (error) {
+                log('rulesCheck', `❌ Permiso de ESCRITURA: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Ñan - Dashboard Repartidor</title>
+    <link rel="stylesheet" href="driver-dashboard-styles.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Configuración de Firebase -->
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header con perfil del repartidor -->
+        <header class="driver-header">
+            <div class="driver-profile">
+                <div class="driver-avatar" id="driverAvatar">
+                    <span class="avatar-placeholder">👤</span>
+                </div>
+                <div class="driver-info">
+                    <h2 class="greeting">Te un gran Día</h2>
+                    <p class="driver-name" id="driverName">Nombre del repartidor</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tarjeta de comisión -->
+        <section class="earnings-card">
+            <div class="earnings-header">
+                <h3 class="earnings-title">Comisión Pendiente</h3>
+                <svg class="chart-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                </svg>
+            </div>
+            <div class="earnings-amount" id="earningsAmount">$0.00</div>
+            <div class="earnings-period">Esta Semana</div>
+        </section>
+
+        <!-- Pedidos Disponibles -->
+        <section class="orders-section">
+            <div class="section-header">
+                <h3 class="section-title">Pedidos Disponibles</h3>
+                <span class="orders-count" id="ordersCount">0</span>
+            </div>
+
+            <!-- Lista de pedidos -->
+            <div class="orders-list" id="ordersList">
+                <!-- Los pedidos se cargarán aquí -->
+            </div>
+
+            <!-- Estado vacío -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">📦</div>
+                <p class="empty-text">No hay pedidos disponibles</p>
+                <p class="empty-subtext">Los nuevos pedidos aparecerán aquí</p>
+            </div>
+
+            <!-- Estado de carga -->
+            <div class="loading-state" id="loadingState">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Buscando pedidos...</p>
+            </div>
+        </section>
+
+        <!-- Navegación inferior -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="window.location.href='driver-dashboard.html'">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <span class="nav-label">Inicio</span>
+            </button>
+            
+            <button class="nav-item" onclick="window.location.href='driver-orders.html'">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                </svg>
+                <span class="nav-label">Mis Pedidos</span>
+            </button>
+            
+            <button class="nav-item" onclick="window.location.href='profile.html'">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span class="nav-label">Perfil</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="driver-dashboard-script.js"></script>
+</body>
+</html>

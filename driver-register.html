@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Ñan Repartidores - Registro</title>
+    <link rel="stylesheet" href="driver-styles.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Configuración de Firebase -->
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <!-- Indicador de estado de Firebase -->
+    <div id="firebaseStatus" class="firebase-status">
+        <span class="status-dot"></span>
+        <span class="status-text">Conectando...</span>
+    </div>
+
+    <div class="container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo-container">
+                <h1 class="logo-text">Ñan</h1>
+                <p class="logo-subtitle">Repartidores</p>
+            </div>
+            <div class="delivery-icon">🚗</div>
+        </div>
+
+        <!-- Register Section -->
+        <div class="register-section">
+            <h2 class="register-title">Únete al Equipo</h2>
+            <p class="register-subtitle">Comienza a ganar dinero como repartidor</p>
+
+            <!-- Nombre Completo -->
+            <div class="input-group">
+                <label class="input-label">Nombre Completo</label>
+                <input type="text" id="nameInput" placeholder="Juan Pérez" class="input-field">
+            </div>
+
+            <!-- Email -->
+            <div class="input-group">
+                <label class="input-label">Correo Electrónico</label>
+                <input type="email" id="emailInput" placeholder="tu@email.com" class="input-field">
+            </div>
+
+            <!-- Teléfono -->
+            <div class="input-group">
+                <label class="input-label">Teléfono</label>
+                <input type="tel" id="phoneInput" placeholder="0987654321" class="input-field" maxlength="10">
+            </div>
+
+            <!-- Cédula -->
+            <div class="input-group">
+                <label class="input-label">Cédula de Identidad</label>
+                <input type="text" id="cedulaInput" placeholder="1234567890" class="input-field" maxlength="10">
+            </div>
+
+            <!-- Tipo de Vehículo -->
+            <div class="input-group">
+                <label class="input-label">Tipo de Vehículo</label>
+                <select id="vehicleTypeInput" class="input-field">
+                    <option value="">Selecciona...</option>
+                    <option value="moto">Moto</option>
+                    <option value="auto">Auto</option>
+                    <option value="bicicleta">Bicicleta</option>
+                </select>
+            </div>
+
+            <!-- Placa del Vehículo -->
+            <div class="input-group">
+                <label class="input-label">Placa del Vehículo</label>
+                <input type="text" id="plateInput" placeholder="ABC-1234" class="input-field" maxlength="8">
+            </div>
+
+            <!-- Contraseña -->
+            <div class="input-group">
+                <label class="input-label">Contraseña</label>
+                <input type="password" id="passwordInput" placeholder="Mínimo 6 caracteres" class="input-field">
+            </div>
+
+            <!-- Confirmar Contraseña -->
+            <div class="input-group">
+                <label class="input-label">Confirmar Contraseña</label>
+                <input type="password" id="confirmPasswordInput" placeholder="Confirma tu contraseña" class="input-field">
+            </div>
+
+            <!-- Términos y Condiciones -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="termsCheckbox" class="checkbox-input">
+                <label for="termsCheckbox" class="checkbox-label">
+                    Acepto los términos y condiciones y la política de privacidad
+                </label>
+            </div>
+
+            <!-- Register Button -->
+            <button class="register-btn" id="registerBtn">
+                Registrarme como Repartidor
+            </button>
+
+            <!-- Login Link -->
+            <div class="login-link-section">
+                <span>¿Ya tienes cuenta? </span>
+                <a href="driver-login.html" class="login-link">Inicia sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="driver-register-script.js"></script>
+</body>
+</html>
